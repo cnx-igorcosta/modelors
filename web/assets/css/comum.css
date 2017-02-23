@@ -1,0 +1,7 @@
+table.result tr.resultLn:hover td{
+  background-color: rgba(128, 128, 128, 0.23) !important;
+}
+
+td.resultLn:hover{
+  background-color: rgba(128, 128, 128, 0.23) !important;
+}

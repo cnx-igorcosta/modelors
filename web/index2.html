@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>ModeloRS</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/comum.css"/>
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/autocomplete.css"/>
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body ng-app="sersApp">
+
+		<!-- Wrapper -->
+			<div id="wrapper" ng-controller="sersCtrl">
+
+				<!-- Header -->
+					<header id="header" class="alt">
+						<span class="logo"><img src="images/logo.svg" alt="" /></span>
+						<h1>ModeloRS</h1>
+						<form method="post" action="#">
+							<div class="row uniform">
+								<div class="12u$">
+									<!-- <input type="text" name="pesquisa" id="pesquisa" ng-model="pesquisa" placeholder="Pesquisar modelos de RS" my-enter="pesquisar();"/> -->
+									<autocomplete ng-model="pesquisa" data="frasesChave" on-type="updateMovies" my-enter="pesquisar();"></autocomplete>
+								</div>
+								<br><br>
+								<div class="12u$">
+										<ul class="actions">
+											<li><a href="#resultados" class="button special icon fa-search scrolly" ng-click="pesquisar();">Pesquisar</a></li>
+											<li><a href="#resultados" class="button scrolly" ng-click="iniciarInsercao();">Inserir</a></li>
+										</ul>
+									</ul>
+								</div>
+							</div>
+						</form>
+					</header>
+
+					<div id="main">
+						<section id="resultados" class="main special" ng-hide="rs._id || editar">
+							<header class="major">
+								<h2>Resultados</h2>
+							</header>
+							<div class="table-wrapper" style="text-align: left;" ng-show="listaRs.length">
+								<table id="result">
+									<thead>
+										<tr>
+											<th>RS</th>
+											<th>Descrição</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="rs in listaRs" ng-click="detalhar(rs);" style="cursor:pointer;" class="resultLn">
+											<td>{{rs.numero}}</td>
+											<td>{{rs.descricao}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<h3 ng-show="!listaRs.length">Nada encontrado.</h3>
+						</section>
+
+						<section id="rs" class="main special" ng-show="rs._id || editar">
+							<header class="major">
+								<h2 ng-hide="mensagem">RS {{rs.numero}}</h2>
+								<h2 ng-show="mensagem">{{mensagem}}</h2>
+							</header>
+							<div class="row uniform" >
+								<div class="2u 12u$(small)" ng-show="editar">
+									<h3>Número: </h3>
+								</div>
+								<div class="10u 12u$(small)" ng-show="editar">
+									<input type="text" name="numero" id="numero" ng-model="rs.numero" ng-show="editar"/>
+								</div>
+								<div class="2u 12u$(small)">
+									<h3>Descrição: </h3>
+								</div>
+								<div class="10u 12u$(small)">
+									<input type="text" name="descricao" id="descricao"ng-model="rs.descricao" ng-disabled="!editar" />
+								</div>
+								<div class="2u 12u$(small)">
+									<h3>Grupo: </h3>
+								</div>
+								<div class="10u 12u$(small)">
+									<input type="text" name="grupo" id="grupo" ng-model="rs.grupo" ng-disabled="!editar" />
+								</div>
+								<div class="2u 12u$(small)">
+									<h3>Modelo: </h3>
+								</div>
+								<div class="10u 12u$(small)">
+									<input type="text" name="modelo" id="modelo" ng-model="rs.modelo" ng-disabled="!editar" />
+								</div>
+								<div class="2u 12u$(small)">
+									<h3>Detalhamento: </h3>
+								</div>
+								<div class="10u 12u$(small)">
+									<textarea name="detalhamento" id="detalhamento" rows="4" ng-disabled="!editar" ng-model="rs.detalhamento"></textarea>
+								</div>
+								<div class="2u 12u$(small)">
+									<h3>Observação: </h3>
+								</div>
+								<div class="10u 12u$(small)">
+									<textarea name="observacao" id="observacao" rows="2" ng-disabled="!editar" ng-model="rs.observacao"></textarea>
+								</div>
+								<div class="2u 12u$(small)">
+									<h3>Tags: </h3>
+								</div>
+								<div class="4u 12u$(small)" ng-show="editar">
+									<input type="text" name="tag" id="tag" ng-model="rs.tag" />
+								</div>
+								<div class="4u 12u$(small)" ng-show="editar">
+									<ul class="actions">
+										<li><a href="" class="button special" ng-click="adicionarTag();">Adicionar Tag</a></li>
+								</div>
+								<div class="10u 12u$(small)" >
+									<ul class="actions">
+										<li ng-repeat="tag in rs.tags track by $index">
+											<a href="" class="button icon fa-tag" ng-click="removerTag($index);">{{tag}}</a>
+										</li>
+									</ul>
+								</div>
+								<div class="12u 12u$(small)">
+									<br><br>
+									<ul class="actions">
+										<li><a href="#rs" class="button special scrolly" ng-click="salvar();" ng-hide="!editar">Salvar</a></li>
+										<li><a href="" class="button" ng-click="voltar();" ng-hide="editar">Voltar</a></li>
+										<li><a href="#rs" class="button scrolly" ng-click="iniciarEdicao();" ng-hide="editar">Editar</a></li>
+										<!--<li><a href="#wrapper" class="button scrolly" ng-click="limpar();">Limpar</a></li>-->
+									</ul>
+							</div>
+							</div>
+						</section>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+			<script src="assets/js/angular/angular.min.js"></script>
+			<script src="assets/js/angular/angular-resource.min.js"></script>
+			<script src="assets/js/angular/app.js"></script>
+			<script src="assets/js/angular/autocomplete.js"></script>
+
+	</body>
+</html>
